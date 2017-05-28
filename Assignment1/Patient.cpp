@@ -91,5 +91,7 @@ bool Patient::operator > (const Patient & rhs)
 
 void Patient::printPatient()
 {
-	Patient::getCareCard();
+	cout << getCareCard() << ", " << " Patient:";
+	cout << getName() << ", " << getAddress() << ", " << getPhone() << ", " << getEmail();
+	return;
 }

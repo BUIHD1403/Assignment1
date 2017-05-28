@@ -45,18 +45,26 @@ bool List::insert(const Patient& newElement)
 			elements[0] = newElement;
 			elementCount++;
 		}
+		else if (elements[0].getCareCard() > newElement.getCareCard())
+		{
+			for (int place = elementCount ; place > (-1) ; place--)
+			{	if(place==0)
+				{
+					elements[0] = newElement;
+					elementCount++;
+					return true;
+				}
+				elements[place] = elements[place-1];
+			}
+		}
 		else
 		{
 			for (int position = 0; position < elementCount; position++)
 			{   
-				if (elements[position].getCareCard() > newElement.getCareCard())
-				{
-					elements[position + 1] = elements[position];
-					elements[position] = newElement;
-				}
-				else if ((elements[position].getCareCard() < newElement.getCareCard()) && (elements[position + 1].getCareCard() == "0000000000"))
+				if ((elements[position].getCareCard() < newElement.getCareCard()) && (elements[position + 1].getCareCard() == "0000000000"))
 				{
 					elements[position + 1] = newElement;
+					return true;
 				}
 				else if((elements[position].getCareCard() < newElement.getCareCard()) && (elements[position + 1].getCareCard() > newElement.getCareCard()))
 				{
@@ -69,6 +77,7 @@ bool List::insert(const Patient& newElement)
 						if (j == (position + 1))
 						{
 							elements[j] = newElement;
+							return true;
 						}
 					}
 				}
@@ -128,10 +137,17 @@ void List::removeAll()
 	elementCount = 0;
 }  // end clear
 
-   /*Patient Patient::search(const Patient& target)
-   {
-   for
-   }*/
+ Patient* List::search(const Patient& target)
+ {	    
+	 for (int i = 0; i < elementCount; i++)
+	 {
+		 if (elements[i].getCareCard() == target.getCareCard())
+		 {
+			 return &elements[i];
+		 }
+	 }
+	 return NULL;
+  }
 
 void List::printList()
 {
