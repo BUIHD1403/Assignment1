@@ -20,109 +20,129 @@ List::List() : elementCount(0), capacity(List::MAX_ELEMENTS) {
 
 
 // Description: Returns the current number of elements in the List.
-int  List::getElementCount() const {
+int  List::getElementCount() const
+{
 	return elementCount;
 }
 
 // Description: Insert an element.
-// Precondition: newElement must not already be in data collection.  
+// Precondition: newElement must not already be in data collection.
 // Postcondition: newElement inserted and elementCount has been incremented.
-bool List::insert(const Patient& newElement) {
-	int flag=0;
-	if (elementCount < (MAX_ELEMENTS - 1))
+bool List::insert(const Patient& newElement)
+{
+	if (elementCount < (MAX_ELEMENTS))
 	{
-		for (int count = 0; count < (MAX_ELEMENTS - 1); count++)
+		for (int _count = 0; _count < MAX_ELEMENTS; _count++)
 		{
-			if (newElement.getCareCard == elements[count].getCareCard)
+			if (newElement.getCareCard() == elements[_count].getCareCard())
 			{
-				flag = 1;
+				return false;
 			}
 		}
-		if (flag==1)
+
+		if (elementCount == 0)
 		{
-			elements[elementCount] = newElement;
+			elements[0] = newElement;
+			elementCount++;
+		}
+		else
+		{
+			for (int position = 0; position < elementCount; position++)
+			{   
+				if (elements[position].getCareCard() > newElement.getCareCard())
+				{
+					elements[position + 1] = elements[position];
+					elements[position] = newElement;
+				}
+				else if ((elements[position].getCareCard() < newElement.getCareCard()) && (elements[position + 1].getCareCard() == "0000000000"))
+				{
+					elements[position + 1] = newElement;
+				}
+				else if((elements[position].getCareCard() < newElement.getCareCard()) && (elements[position + 1].getCareCard() > newElement.getCareCard()))
+				{
+				//	int difference;
+				//	difference = MAX_ELEMENTS - elementCount;
+
+					for (int j= (elementCount-1); j> position; j--)
+					{
+						elements[j + 1] = elements[j];
+						if (j == (position + 1))
+						{
+							elements[j] = newElement;
+						}
+					}
+				}
+			}
 			elementCount++;
 		}
 	}
 	return true;
-}  // end insert
+}
+
+// end insert
 
 
-   // Description: Removes the element at position in the List 
-   // Postcondition: If 1 <= position <= getElementCount() and the removal is successful,
-   //                the element at position in the List is removed, and
-   //                other elements "have moved" 1 position down, 
-   //                and the returned value is true. Otherwise, false is returned.
-bool ListADT::remove(int position) {
-	bool ableToRemove = (position >= 1) && (position <= elementCount);
-	if (ableToRemove)
-	{
-		// Remove Element by shifting all elements after the one at
-		// position toward the beginning of the array
-		// (no shift if position == elementCount)
-		for (int fromIndex = position, toIndex = fromIndex - 1; fromIndex < elementCount;
-			fromIndex++, toIndex++)
-			elements[toIndex] = elements[fromIndex];
-
-		elementCount--;  // Decrease count of elements
-	}  // end if
-
-	return ableToRemove;
+bool List::remove(const Patient& toBeRemoved)
+{   // Check wether the list is empty
+	if (elementCount == 0)
+		return false;
+	else
+	{   //Run through the array
+		for (int position = 0; position < MAX_ELEMENTS; position++)
+		{
+			// Check the matching carCard between 2 input
+			if (toBeRemoved.getCareCard() == elements[position].getCareCard())
+			{   
+				// When the removed element is the last of the array
+				if (position == (MAX_ELEMENTS - 1))
+				{
+					elements[position] = Patient();
+					return true;
+				}
+				//When the removed is in the middle of array
+				for (int Index = position; Index < elementCount; Index++)
+				{
+					//When we meet last element of the array
+					if(Index==(elementCount-1))
+					{
+						elements[Index] = Patient();
+					}
+					else
+					{
+						elements[Index] = elements[Index + 1];
+					}
+				}
+				elementCount--;
+				return true;
+			}
+		}
+	}
+	return false;
 }  // end remove
 
 
    // Description: Removes all elements from the List.
    // Postconditions: List contains no elements and the element count is 0.
-void List::removeAll() {
+void List::removeAll()
+{
 	elementCount = 0;
-	for (int count = 0; count < (MAX_ELEMENTS - 1); count++)
-	{
-		elements[count].getAddress = "To be entered";
-		elements[count].getAddress = "0000000000";
-	}
-
 }  // end clear
 
+   /*Patient Patient::search(const Patient& target)
+   {
+   for
+   }*/
 
-   // Description: Returns the element at position in the List.
-   // Precondition: 1 <= position <= getElementCount().
-Profile ListADT::getElement(int position) const {
-	Profile toBeReturned;
-
-	// Enforce precondition
-	bool ableToGet = (position >= 1) && (position <= elementCount);
-	if (ableToGet)
-		toBeReturned = elements[position - 1];
-	else
+void List::printList()
+{
+	for (int i = 0; i< elementCount; i++)
 	{
-		string message = "getElement() called with an empty List or an invalid position.";
-		cout << message;  // throw exception may be better
-	}  // end if
+		elements[i].printPatient();
+		cout <<endl;
+	}
+	return;
+}
 
-	return toBeReturned;
-}  // end getElement
 
 
-   // Description: Replaces the element at position by newElement in the List.
-   // Precondition: 1 <= position <= getElementCount().
-void ListADT::setElement(int position, const Profile& newElement) {
-	// Enforce precondition
-	bool ableToSet = (position >= 1) && (position <= elementCount);
-	if (ableToSet)
-		elements[position - 1] = newElement;
-	else
-	{
-		string message = "setElement() called with an empty List or an invalid position.";
-		cout << message;  // throw exception may be better
-	}  // end if
-}  // end setElement
-
-   // Description: Prints all elements in the List.
-ostream & operator<<(ostream & os, const ListADT& rhs) {
-	for (int index = 0; index < rhs.elementCount; index++)
-		os << "Element " << index + 1 << " is " << rhs.elements[index].getName() << endl;
-
-	return os;
-} // end of operator << 
-
-  //  End of implementation file
+//  End of implementation file

@@ -1,24 +1,24 @@
 /*
- * Patient.h
- * 
- * Class Description: Models a walk-in clinic patient.
- * Class Invariant: Each patient has a unique care card number.
- *                  This care card number must have 10 digits.
- *                  This care card number cannot be modified. 
- *
- * Last modified on: May 2017
- * Author: AL
- */
+* Patient.h
+*
+* Class Description: Models a walk-in clinic patient.
+* Class Invariant: Each patient has a unique care card number.
+*                  This care card number must have 10 digits.
+*                  This care card number cannot be modified.
+*
+* Last modified on: May 2017
+* Author: AL
+*/
 
 #pragma once
 #include <string>
 using namespace std;
 
 class Patient {
-	
+
 private:
-	string name;                
-	string address;          
+	string name;
+	string address;
 	string phone;
 	string email;
 	string careCard;
@@ -48,7 +48,7 @@ public:
 
 	// Description: Returns patient's email.
 	string getEmail() const;
-	
+
 	// Description: Returns patient's care card number.
 	string getCareCard() const;
 
@@ -68,13 +68,13 @@ public:
 	// Description: Comparison operator. Compares "this" Patient object with "rhs" Patient object.
 	//              Returns true if both Patient objects have the same care card number.
 	bool operator==(const Patient & rhs);
-	
+
 	// Description: Greater than operator. Compares "this" Patient object with "rhs" Patient object.
 	//              Returns true if the care card number of "this" Patient object is > the care card number of "rhs" Patient object.
 	bool operator>(const Patient & rhs);
-	
+
 	// Description: Prints the content of "this" patient.
-	void printPatient( );
+	void printPatient();
 
 };
 // end of Patient.h
